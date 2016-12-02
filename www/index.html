@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <title></title>
+
+
+https://github.com/macdonst/SpeechRecognitionPlugin
+
+    <link rel="manifest" href="manifest.json">
+
+    <!-- un-comment this code to enable service worker
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('service-worker.js')
+          .then(() => console.log('service worker installed'))
+          .catch(err => console.log('Error', err));
+      }
+    </script>-->
+
+    <link href="lib/ionic/css/ionic.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+
+    <!-- IF using Sass (run gulp sass first), then uncomment below and remove the CSS includes above
+    <link href="css/ionic.app.css" rel="stylesheet">
+    -->
+
+    <!-- ionic/angularjs js -->
+    <script src="lib/ionic/js/ionic.bundle.js"></script>
+
+    <!-- cordova script (this will be a 404 during development) -->
+    <script src="cordova.js"></script>
+
+    <!-- your app's js -->
+    <script src="js/app.js"></script>
+  </head>
+  <body ng-app="starter">
+
+  <script type="text/javascript">
+var recognition;
+var ascolto = false;
+document.addEventListener('deviceready', onDeviceReady, false);
+
+function onDeviceReady() {
+  console.log("onDeviceReady");
+    recognition = new SpeechRecognition();
+    recognition.lang="it";
+    recognition.continuos=true;
+    recognition.onresult = function(event) {
+      console.log("onResult", event);
+        if (event.results.length > 0) {
+            q.value = event.results[0][0].transcript;
+            console.log(event, q);
+            document.getElementById("capito").innerHTML = q.value;
+            //q.form.submit();
+        }
+    }
+    recognition.onstart = function(event) {
+      console.log("Start", event);
+    }
+    recognition.onend = function(event) {
+      console.log("Fine", event);
+    }
+    recognition.onerror = function(event) {
+      console.log("Error", event);
+    }
+}
+
+function _ascolta(){
+  var _p = document.getElementById("pagina");
+  if (ascolto==true){
+    console.log("finisco di ascoltare");
+    _p.style.backgroundColor = "#FFF";    
+    recognition.stop();
+    ascolto=false;
+  }else{
+    console.log("parto ad ascoltare");
+    _p.style.backgroundColor = "#e9b96e";
+    recognition.start();
+    ascolto=true;
+    document.getElementById("capito").innerHTML = "ascolto";
+    
+  }
+}
+
+</script>
+
+<!--
+   <script type="text/javascript">
+     speechSynthesis.speak(SpeechSynthesisUtterance('Hello World'));
+  </script>
+ <script type="text/javascript">
+     var u = new SpeechSynthesisUtterance();
+     u.text = 'Hello World';
+     u.lang = 'it-IT';
+     u.rate = 1.2;
+     u.onend = function(event) { alert('Finished in ' + event.elapsedTime + ' seconds.'); }
+     speechSynthesis.speak(u);
+  </script>
+-->
+
+
+    
+
+      <ion-header-bar class="bar-stable">
+        <h1 class="title">Ionic Speak Me</h1>
+      </ion-header-bar>
+
+      <ion-content class="has-footer has-header">
+        <div id="pagina">
+        Origine plugin: <br>
+        https://github.com/macdonst/SpeechRecognitionPlugin
+        <div class="card">
+            <div id="capito" class="item item-text-wrap"></div>
+           </div>
+        <form action="http://www.example.com/search">
+            <textarea type="search" id="q" name="q" style="width:100%; margin:15px 0; min-height: 200px; background: #FAFAD2;" ></textarea>
+           
+        </form>
+        </div>
+      </ion-content>
+
+      <ion-footer-bar class="bar bar-footer bar-balanced">
+        
+           <button type="button" onclick="_ascolta();" 
+           class="button button-full button-balanced" style="margin-top: 0;">
+           Click to start/stop Speak
+           </button>
+       
+      
+      </ion-footer-bar>
+
+    
+
+
+
+
+
+
+
+  </body>
+</html>
